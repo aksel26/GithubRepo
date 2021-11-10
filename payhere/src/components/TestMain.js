@@ -1,0 +1,143 @@
+import React, { useEffect, useState } from "react"
+import Axios from "axios"
+import ListUp from "./ListUp"
+import List from "@mui/material/List"
+import ListItem from "@mui/material/ListItem"
+import CheckIcon from "@mui/icons-material/Check"
+import ListItemButton from "@mui/material/ListItemButton"
+import ListItemIcon from "@mui/material/ListItemIcon"
+import ListItemText from "@mui/material/ListItemText"
+import Button from "@mui/material/Button"
+import Grid from "@mui/material/Grid"
+import TextField from "@mui/material/TextField"
+import Swal from "sweetalert2"
+
+function TestMain() {
+  const [rawData, setRawData] = useState([])
+  const [inputSearch, setInputSearch] = useState("")
+  const [storage, setStorage] = useState([])
+  const [selected, setSelected] = useState([])
+  const [loading, setLoading] = useState(false)
+
+  const loadData = async () => {
+    setLoading(true)
+    await Axios.get("https://api.github.com/users/aksel26/repos").then(
+      (response) => {
+        if (response.status === 200) {
+          setRawData(response.data)
+          setLoading(false)
+        } else {
+          alert("불러오기 실패")
+        }
+      }
+    )
+  }
+
+  useEffect(() => {
+    loadData()
+  }, [])
+
+  useEffect(() => {
+    if (storage.length >= 1) {
+      selectedList(storage.id)
+    }
+  }, [rawData])
+
+  useEffect(() => {
+    if (storage.name !== undefined || storage.id !== undefined)
+      toLocal(storage.name, storage.id)
+  }, [storage])
+
+  const extractStorage = (id) => {
+    if (localStorage.getItem(id) !== null) {
+      return localStorage.getItem(id).replace(/[""]/g, "")
+    } else {
+      return null
+    }
+  }
+  const handleSave = (detail) => {
+    setStorage(detail)
+  }
+
+  const toLocal = (item, id) => {
+    if (localStorage.length <= 3) {
+      localStorage.setItem(id, item)
+      selectedList(id)
+    } else return Swal.fire("최대 4개까지 등록가능합니다")
+  }
+  const selectedList = (id) => {
+    if (extractStorage(id) !== null) {
+      return setSelected([extractStorage(id)])
+    }
+  }
+
+  const handlerSearch = (e) => {
+    setInputSearch(e.target.value)
+  }
+
+  // 다시담기
+  const initSelected = () => {
+    localStorage.clear()
+    setSelected([])
+    setStorage([])
+  }
+  const listUp = (rawData, loading) => {
+    if (loading) {
+      return <h2>Loading...</h2>
+    }
+    return rawData.map((v) => {
+      if (v.name.indexOf(inputSearch) !== -1) {
+        return (
+          <List>
+            <ListItem sx={{ m: -2 }}>
+              <ListItemIcon>
+                <CheckIcon sx={{ width: "100%" }} />
+              </ListItemIcon>
+              <ListItemButton
+                onClick={() => {
+                  handleSave(v)
+                }}
+              >
+                <ListItemText
+                  sx={{ width: "50%" }}
+                  primary={v.name}
+                ></ListItemText>
+              </ListItemButton>
+            </ListItem>
+          </List>
+        )
+      } else {
+        return null
+      }
+    })
+  }
+  return (
+    <Grid container spacing={2} padding={10}>
+      <Grid item xs={6}>
+        <TextField
+          value={inputSearch}
+          onChange={handlerSearch}
+          id="outlined-basic"
+          label="저장소 이름을 입력하세요"
+          variant="outlined"
+          sx={{ mb: 4 }}
+        />
+        <Button
+          variant="outlined"
+          onClick={initSelected}
+          sx={{ ml: 10, height: "56px" }}
+        >
+          다시 담기
+        </Button>
+        {listUp(rawData, loading)}
+      </Grid>
+
+      <Grid item xs={6}>
+        <h2>선택된 저장소</h2>
+        <ListUp selected={selected} detail={storage} rawData={rawData}></ListUp>
+      </Grid>
+    </Grid>
+  )
+}
+
+export default TestMain
