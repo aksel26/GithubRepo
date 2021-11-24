@@ -17,6 +17,7 @@ function Detail() {
   const [DetailsPerPage] = useState(10)
 
   let { id } = useParams()
+  console.log("id: ", id)
 
   const getDetailData = async (id) => {
     setLoading(true)

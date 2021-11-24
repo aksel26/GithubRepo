@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useContext } from "react"
+import { Navigate } from "react-router-dom"
 import Axios from "axios"
 import ListUp from "./ListUp"
 import List from "@mui/material/List"
@@ -11,6 +12,7 @@ import Button from "@mui/material/Button"
 import Grid from "@mui/material/Grid"
 import TextField from "@mui/material/TextField"
 import Swal from "sweetalert2"
+import { AuthContext } from "../App"
 
 function TestMain() {
   const [rawData, setRawData] = useState([])
@@ -18,6 +20,8 @@ function TestMain() {
   const [storage, setStorage] = useState([])
   const [selected, setSelected] = useState([])
   const [loading, setLoading] = useState(false)
+  const { state, dispatch } = useContext(AuthContext)
+  console.log("state: ", state)
 
   const loadData = async () => {
     setLoading(true)
@@ -48,6 +52,9 @@ function TestMain() {
       toLocal(storage.name, storage.id)
   }, [storage])
 
+  if (!state.isLoggedIn) {
+    return <Navigate to="/loginAPI" />
+  }
   const extractStorage = (id) => {
     if (localStorage.getItem(id) !== null) {
       return localStorage.getItem(id).replace(/[""]/g, "")
