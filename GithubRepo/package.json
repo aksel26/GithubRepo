@@ -1,6 +1,6 @@
 {
   "type": "module",
-  "name": "payhere",
+  "name": "githubRepo",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
