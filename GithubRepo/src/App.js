@@ -20,7 +20,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Main />}></Route>
-          <Route path="/loginAPI" element={<Login />}></Route>
+          <Route path="/gitRepo" element={<Login />}></Route>
           <Route path="/:id" element={<Detail />}></Route>
         </Routes>
       </BrowserRouter>
