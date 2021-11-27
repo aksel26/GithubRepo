@@ -53,7 +53,7 @@ function TestMain() {
   }, [storage])
 
   if (!state.isLoggedIn) {
-    return <Navigate to="/loginAPI" />
+    return <Navigate to="/gitRepo" />
   }
   const extractStorage = (id) => {
     if (localStorage.getItem(id) !== null) {
@@ -88,6 +88,15 @@ function TestMain() {
     setSelected([])
     setStorage([])
   }
+
+  const logOut = () => {
+    if (state.isLoggedIn) {
+      dispatch({
+        type: "LOGOUT",
+      })
+    }
+  }
+
   const listUp = (rawData, loading) => {
     if (loading) {
       return <h2>Loading...</h2>
@@ -140,7 +149,11 @@ function TestMain() {
       </Grid>
 
       <Grid item xs={6}>
+        <Button variant="outlined" onClick={logOut}>
+          로그아웃
+        </Button>
         <h2>선택된 저장소</h2>
+
         <ListUp selected={selected} detail={storage} rawData={rawData}></ListUp>
       </Grid>
     </Grid>
