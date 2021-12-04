@@ -1,11 +1,11 @@
-import React from "react"
-import Pagination from "@mui/material/Pagination"
+import React from "react";
+import Pagination from "@mui/material/Pagination";
 
 export const PaginationFunc = ({ detailsPerPage, totalDetails, paginate }) => {
-  const pageNumbers = []
+  const pageNumbers = [];
 
   for (let i = 1; i <= Math.ceil(totalDetails / detailsPerPage); i++) {
-    pageNumbers.push(i)
+    pageNumbers.push(i);
   }
 
   return (
@@ -17,7 +17,7 @@ export const PaginationFunc = ({ detailsPerPage, totalDetails, paginate }) => {
         onChange={(e) => paginate(Number(e.target.innerText))}
       ></Pagination>
     </nav>
-  )
-}
+  );
+};
 
-export default PaginationFunc
+export default PaginationFunc;

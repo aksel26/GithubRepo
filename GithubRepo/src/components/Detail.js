@@ -1,58 +1,57 @@
-import React, { useState, useEffect } from "react"
-import Axios from "axios"
-import List from "@mui/material/List"
-import ListItem from "@mui/material/ListItem"
-import CheckIcon from "@mui/icons-material/Check"
-import ListItemButton from "@mui/material/ListItemButton"
-import ListItemIcon from "@mui/material/ListItemIcon"
-import ListItemText from "@mui/material/ListItemText"
-import PaginationFunc from "./PaginationFunc"
-import { Link, useParams } from "react-router-dom"
+import React, { useState, useEffect } from "react";
+import Axios from "axios";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import CheckIcon from "@mui/icons-material/Check";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import PaginationFunc from "./PaginationFunc";
+import { Link, useParams } from "react-router-dom";
 function Detail() {
-  const [DetailData, setDetailData] = useState([])
+  const [DetailData, setDetailData] = useState([]);
 
-  const [loading, setLoading] = useState(false)
-  const [currentPage, setCurrentPage] = useState(1)
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const [DetailsPerPage] = useState(10)
+  const [DetailsPerPage] = useState(10);
 
-  let { id } = useParams()
-  console.log("id: ", id)
+  let { id } = useParams();
 
   const getDetailData = async (id) => {
-    setLoading(true)
+    setLoading(true);
     await Axios.get(`https://api.github.com/repos/aksel26/${id}/issues`).then(
       (response) => {
         if (response.status === 200) {
-          setDetailData(response.data)
-          setLoading(false)
+          setDetailData(response.data);
+          setLoading(false);
         } else {
-          alert("불러오기 실패")
+          alert("불러오기 실패");
         }
       }
-    )
-  }
+    );
+  };
 
   useEffect(() => {
-    getDetailData(id)
-  }, [id])
+    getDetailData(id);
+  }, [id]);
 
-  const indexOfLastDetails = currentPage * DetailsPerPage
-  const indexOfFristDetails = indexOfLastDetails - DetailsPerPage
+  const indexOfLastDetails = currentPage * DetailsPerPage;
+  const indexOfFristDetails = indexOfLastDetails - DetailsPerPage;
   const currentDetail = DetailData.slice(
     indexOfFristDetails,
     indexOfLastDetails
-  )
+  );
 
   const paginate = (pageNumber) => {
-    setCurrentPage(pageNumber)
-  }
+    setCurrentPage(pageNumber);
+  };
 
   const listUp = (DetailData, loading) => {
     if (loading) {
-      return <h2>Loading...</h2>
+      return <h2>Loading...</h2>;
     }
-    if (DetailData.length === 0) return "데이터가 없습니다."
+    if (DetailData.length === 0) return "데이터가 없습니다.";
     else {
       return DetailData.map((v) => (
         <List>
@@ -67,9 +66,9 @@ function Detail() {
             </ListItemButton>
           </ListItem>
         </List>
-      ))
+      ));
     }
-  }
+  };
 
   return (
     <div style={{ padding: "40px" }}>
@@ -85,7 +84,7 @@ function Detail() {
         paginate={paginate}
       ></PaginationFunc>
     </div>
-  )
+  );
 }
 
-export default Detail
+export default Detail;
