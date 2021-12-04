@@ -1,14 +1,14 @@
-import React, { createContext, useReducer } from "react"
-import Main from "./components/Main"
-import Detail from "./components/Detail"
-import Login from "./components/Login"
-import { BrowserRouter, Route, Routes } from "react-router-dom"
-import { initialState, reducer } from "./store/reducer"
+import React, { createContext, useReducer } from "react";
+import Main from "./components/Main";
+import Detail from "./components/Detail";
+import Login from "./components/Login";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { initialState, reducer } from "./store/reducer";
 
-export const AuthContext = createContext()
+export const AuthContext = createContext();
 
 function App() {
-  const [state, dispatch] = useReducer(reducer, initialState)
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
     <AuthContext.Provider
@@ -25,7 +25,7 @@ function App() {
         </Routes>
       </BrowserRouter>
     </AuthContext.Provider>
-  )
+  );
 }
 
-export default App
+export default App;
