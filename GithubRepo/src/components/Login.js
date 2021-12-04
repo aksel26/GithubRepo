@@ -1,55 +1,54 @@
-import React, { useState, useContext, useEffect } from "react"
-import Styled from "styled-components"
-import { AuthContext } from "../App"
-import Icon from "@mdi/react"
-import { mdiGithub } from "@mdi/js"
-import { Navigate } from "react-router-dom"
+import React, { useState, useContext, useEffect } from "react";
+import Styled from "styled-components";
+import { AuthContext } from "../App";
+import Icon from "@mdi/react";
+import { mdiGithub } from "@mdi/js";
+import { Navigate } from "react-router-dom";
 
 export default function Login() {
-  const { state, dispatch } = useContext(AuthContext)
-  const [data, setData] = useState({ errorMessage: "", isLoading: false })
+  const { state, dispatch } = useContext(AuthContext);
+  const [data, setData] = useState({ errorMessage: "", isLoading: false });
 
-  const { client_id, redirect_uri } = state
+  const { client_id, redirect_uri } = state;
   useEffect(() => {
     // After requesting Github access, Github redirects back to your app with a code parameter
-    const url = window.location.href
-    const hasCode = url.includes("?code=")
+    const url = window.location.href;
+    const hasCode = url.includes("?code=");
 
     // If Github API returns the code parameter
     if (hasCode) {
-      const newUrl = url.split("?code=")
-      window.history.pushState({}, null, newUrl[0])
-      setData({ ...data, isLoading: true })
-
+      const newUrl = url.split("?code=");
+      window.history.pushState({}, null, newUrl[0]);
+      setData({ ...data, isLoading: true });
       const requestData = {
         code: newUrl[1],
-      }
+      };
 
-      const proxy_url = state.proxy_url
+      const proxy_url = state.proxy_url;
 
       // Use code parameter and other parameters to make POST request to proxy_server
       fetch(proxy_url, {
         method: "POST",
         body: JSON.stringify(requestData),
       })
-        // .then((response) => response.json())
+        .then((response) => response.json())
         .then((data) => {
           dispatch({
             type: "LOGIN",
             payload: { user: data, isLoggedIn: true },
-          })
+          });
         })
         .catch((error) => {
           setData({
             isLoading: false,
             errorMessage: "로그인 실패!",
-          })
-        })
+          });
+        });
     }
-  }, [state, dispatch, data])
+  }, [state, dispatch, data]);
 
   if (state.isLoggedIn) {
-    return <Navigate to="/" />
+    return <Navigate to="/" />;
   }
 
   return (
@@ -70,7 +69,7 @@ export default function Login() {
                   className="login-link"
                   href={`https://github.com/login/oauth/authorize?scope=user&client_id=${client_id}&redirect_uri=${redirect_uri}`}
                   onClick={() => {
-                    setData({ ...data, errorMessage: "" })
+                    setData({ ...data, errorMessage: "" });
                   }}
                 >
                   <Icon path={mdiGithub} size={1} horizontal color="white" />
@@ -82,7 +81,7 @@ export default function Login() {
         </div>
       </section>
     </Wrapper>
-  )
+  );
 }
 
 const Wrapper = Styled.section`
@@ -160,4 +159,4 @@ const Wrapper = Styled.section`
         }
       }
     }
-  `
+  `;
