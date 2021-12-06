@@ -23,11 +23,17 @@ function TestMain() {
 
   const loadData = async () => {
     setLoading(true);
-    const tt = localStorage.getItem("user").split(",");
-    const ttt = tt[0].split(":");
-    const id = ttt[1].replace(/[""]/g, "");
+    const userId = localStorage
+      .getItem("user")
+      .split(",")[0]
+      .replace(/[""]/g, "")
+      .substring(7);
 
-    await Axios.get(`https://api.github.com/users/${id}/repos`).then(
+    // const ttt = tt[0].split(":");
+
+    // const id = ttt[1].replace(/[""]/g, "");
+
+    await Axios.get(`https://api.github.com/users/${userId}/repos`).then(
       (response) => {
         if (response.status === 200) {
           setRawData(response.data);
