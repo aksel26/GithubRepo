@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { AuthContext } from "../App";
 import Axios from "axios";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -9,39 +10,36 @@ import ListItemText from "@mui/material/ListItemText";
 import PaginationFunc from "./PaginationFunc";
 import { Link, useParams } from "react-router-dom";
 function Detail() {
-  const [DetailData, setDetailData] = useState([]);
-
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
   const [DetailsPerPage] = useState(10);
 
-  let { id } = useParams();
+  const [commits, setCommits] = useState([]);
 
-  const getDetailData = async (id) => {
-    setLoading(true);
-    await Axios.get(`https://api.github.com/repos/aksel26/${id}/issues`).then(
-      (response) => {
-        if (response.status === 200) {
-          setDetailData(response.data);
-          setLoading(false);
-        } else {
-          alert("불러오기 실패");
-        }
-      }
-    );
-  };
+  let { id } = useParams();
+  const { state } = useContext(AuthContext);
+  const [userId, setUserId] = useState(state.user.login);
 
   useEffect(() => {
-    getDetailData(id);
-  }, [id]);
+    getCommits(id, userId);
+  }, [id, userId]);
 
+  const getCommits = async (storageName, user) => {
+    await Axios.get(
+      `https://api.github.com/repos/${user}/${storageName}/commits`
+    ).then((response) => {
+      if (response.status === 200) {
+        setCommits(response.data);
+        setLoading(false);
+      } else {
+        alert("불러오기 실패");
+      }
+    });
+  };
   const indexOfLastDetails = currentPage * DetailsPerPage;
   const indexOfFristDetails = indexOfLastDetails - DetailsPerPage;
-  const currentDetail = DetailData.slice(
-    indexOfFristDetails,
-    indexOfLastDetails
-  );
+  const currentDetail = commits.slice(indexOfFristDetails, indexOfLastDetails);
 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -60,8 +58,8 @@ function Detail() {
               <CheckIcon sx={{ width: "100%" }} />
             </ListItemIcon>
             <ListItemButton>
-              <Link to={`//github.com/aksel26/${id}/issues/${v.number}`}>
-                <ListItemText primary={v.title}></ListItemText>
+              <Link to={`//github.com/aksel26/${id}/commit/${v.sha}`}>
+                <ListItemText primary={v.commit.message}></ListItemText>
               </Link>
             </ListItemButton>
           </ListItem>
@@ -80,7 +78,7 @@ function Detail() {
 
       <PaginationFunc
         detailsPerPage={DetailsPerPage}
-        totalDetails={DetailData.length}
+        totalDetails={commits.length}
         paginate={paginate}
       ></PaginationFunc>
     </div>
