@@ -23,15 +23,12 @@ function TestMain() {
 
   const loadData = async () => {
     setLoading(true);
-    const userId = localStorage
-      .getItem("user")
-      .split(",")[0]
-      .replace(/[""]/g, "")
-      .substring(7);
-
-    // const ttt = tt[0].split(":");
-
-    // const id = ttt[1].replace(/[""]/g, "");
+    const userId =
+      localStorage
+        .getItem("user")
+        .split(",")[0]
+        .replace(/[""]/g, "")
+        .substring(7) || "";
 
     await Axios.get(`https://api.github.com/users/${userId}/repos`).then(
       (response) => {
