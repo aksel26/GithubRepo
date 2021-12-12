@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../App";
-import { Link } from "react-router-dom";
-
+import Button from "./style/Button";
+import LinkRouter from "./style/LinkRouter";
 function ListUp() {
   const [items, setItems] = useState([]);
 
@@ -27,19 +27,12 @@ function ListUp() {
   const listSelected = () => {
     if (items.length >= 1) {
       return items.map((v, id) => (
-        <ul>
-          <li>
-            <Link to={v.name}>{v.name}</Link>
-            <button
-              name={v.name}
-              id={v.storeId}
-              onClick={deleteElement}
-              variant="outlined"
-            >
-              삭제
-            </button>
-          </li>
-        </ul>
+        <li style={{ listStyle: "none", padding: "3px 0px" }}>
+          <LinkRouter to={v.name}>{v.name}</LinkRouter>
+          <Button name={v.name} id={v.storeId} onClick={deleteElement}>
+            삭제
+          </Button>
+        </li>
       ));
     } else {
       return null;
@@ -47,14 +40,14 @@ function ListUp() {
   };
 
   return (
-    <div style={{ width: "50%", justifyContent: "center" }}>
+    <div>
       <div>
-        <button variant="outlined" onClick={logOut}>
-          로그아웃
-        </button>
-        <h2>선택된 저장소</h2>
+        <Button onClick={logOut}>로그아웃</Button>
+        <h1>선택된 저장소</h1>
       </div>
-      <div>{listSelected()}</div>
+      <div>
+        <ul style={{ paddingLeft: "0px" }}>{listSelected()}</ul>
+      </div>
     </div>
   );
 }

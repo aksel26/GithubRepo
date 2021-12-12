@@ -1,14 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../App";
 import Axios from "axios";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import CheckIcon from "@mui/icons-material/Check";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import PaginationFunc from "./PaginationFunc";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import List from "./style/List";
+import LinkRouter from "./style/LinkRouter";
 function Detail() {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -19,7 +16,7 @@ function Detail() {
 
   let { id } = useParams();
   const { state } = useContext(AuthContext);
-  const [userId, setUserId] = useState(state.user.login);
+  const [userId] = useState(state.user.login);
 
   useEffect(() => {
     getCommits(id, userId);
@@ -53,16 +50,9 @@ function Detail() {
     else {
       return DetailData.map((v) => (
         <List>
-          <ListItem sx={{ m: -2 }}>
-            <ListItemIcon>
-              <CheckIcon sx={{ width: "100%" }} />
-            </ListItemIcon>
-            <ListItemButton>
-              <Link to={`//github.com/aksel26/${id}/commit/${v.sha}`}>
-                <ListItemText primary={v.commit.message}></ListItemText>
-              </Link>
-            </ListItemButton>
-          </ListItem>
+          <LinkRouter to={`//github.com/aksel26/${id}/commit/${v.sha}`}>
+            <ListItemText primary={v.commit.message}></ListItemText>
+          </LinkRouter>
         </List>
       ));
     }
@@ -70,11 +60,16 @@ function Detail() {
 
   return (
     <div style={{ padding: "40px" }}>
-      <h1>Storage Name : {id} issues </h1>
+      <h1>
+        Storage Name : <span style={{ color: "tomato" }}>{id}</span> Commits{" "}
+      </h1>
       <h3>
-        {id}에 관한 이슈 갯수 : {currentDetail.length} 개
+        {id}에 관한 Commit 갯수 :{" "}
+        <span style={{ color: "tomato" }}>{commits.length}</span> 개
       </h3>
-      <div>{listUp(currentDetail, loading)}</div>
+      <div>
+        <ul>{listUp(currentDetail, loading)}</ul>
+      </div>
 
       <PaginationFunc
         detailsPerPage={DetailsPerPage}

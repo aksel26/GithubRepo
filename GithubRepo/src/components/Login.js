@@ -91,6 +91,7 @@ const Wrapper = Styled.section`
       align-items: center;
       height: 100vh;
       font-family: Arial;
+
       
       > div:nth-child(1) {
         display: flex;
@@ -141,8 +142,8 @@ const Wrapper = Styled.section`
             height: 40px;
           }
           .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3498db;
+            /* border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db; */
             border-radius: 50%;
             width: 12px;
             height: 12px;

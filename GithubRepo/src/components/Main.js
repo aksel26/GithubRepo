@@ -3,6 +3,13 @@ import { Navigate } from "react-router-dom";
 import Axios from "axios";
 import ListUp from "./ListUp";
 import { AuthContext } from "../App";
+import Button from "./style/Button";
+import Input from "./style/Input";
+import Wrapper from "./style/Wrapper";
+import Left from "./style/Left";
+import Right from "./style/Right";
+import Container from "./style/Container";
+import List from "./style/List";
 
 function TestMain() {
   const [rawData, setRawData] = useState([]);
@@ -59,16 +66,13 @@ function TestMain() {
     return rawData.map((v) => {
       if (v.name.indexOf(inputSearch) !== -1) {
         return (
-          <ul>
-            <li
-              sx={{ m: -2.5 }}
-              onClick={() => {
-                handleSave(v);
-              }}
-            >
-              {v.name}
-            </li>
-          </ul>
+          <List
+            onClick={() => {
+              handleSave(v);
+            }}
+          >
+            {v.name}
+          </List>
         );
       } else {
         return null;
@@ -76,22 +80,28 @@ function TestMain() {
     });
   };
   return (
-    <div>
-      <div style={{ width: "50%" }}>
-        <input
-          value={inputSearch}
-          onChange={handlerSearch}
-          placeholder="저장소 이름을 입력하세요"
-          variant="outlined"
-        />
-        <button variant="outlined" onClick={initSelected}>
-          다시 담기
-        </button>
-        {listUp(rawData, loading)}
-      </div>
+    <Container>
+      <Wrapper>
+        <Left>
+          <Input
+            value={inputSearch}
+            onChange={handlerSearch}
+            placeholder="저장소 이름을 입력하세요"
+          />
 
-      <ListUp selected={selected} detail={storage} rawData={rawData}></ListUp>
-    </div>
+          <Button onClick={initSelected}>다시 담기</Button>
+          <h1>Storage List</h1>
+          <ul style={{ paddingLeft: "0px" }}>{listUp(rawData, loading)}</ul>
+        </Left>
+        <Right>
+          <ListUp
+            selected={selected}
+            detail={storage}
+            rawData={rawData}
+          ></ListUp>
+        </Right>
+      </Wrapper>
+    </Container>
   );
 }
 
