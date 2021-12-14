@@ -98,8 +98,6 @@ const Wrapper = Styled.section`
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2);
-        transition: 0.3s;
         width: 25%;
         height: 45%;
         > h1 {

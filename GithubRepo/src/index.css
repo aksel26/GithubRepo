@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
 
 body {
-  margin: 0;
+  /* margin: 0; */
   font-family:'Do Hyeon', sans-serif;
-  background-image: url("./background.svg");
-  background-repeat: no-repeat;
-  background-size: cover;
+  background-image: url("./cool-background.png");
+  /* background-repeat: no-repeat; */
+  /* background-size: cover; */
 }
 
 code {

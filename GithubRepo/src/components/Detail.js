@@ -51,7 +51,7 @@ function Detail() {
       return DetailData.map((v) => (
         <List>
           <LinkRouter to={`//github.com/aksel26/${id}/commit/${v.sha}`}>
-            <ListItemText primary={v.commit.message}></ListItemText>
+            {v.commit.message}
           </LinkRouter>
         </List>
       ));

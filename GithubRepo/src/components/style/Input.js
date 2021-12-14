@@ -1,15 +1,15 @@
 import styled from "styled-components";
 
 const Input = styled.input`
-  background: white;
+  background: transparent;
   border-radius: 5px;
+  border: 2px solid black;
   ::placeholder {
+    font-size: 13px;
     color: #333;
   }
   height: 30px;
   margin-right: 20px;
-
-  border: 1px solid #333;
   text-align: center;
 `;
 
