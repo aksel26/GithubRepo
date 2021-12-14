@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../App";
 import Axios from "axios";
-import ListItemText from "@mui/material/ListItemText";
 import PaginationFunc from "./PaginationFunc";
 import { useParams } from "react-router-dom";
 import List from "./style/List";

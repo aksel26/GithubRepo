@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import { Navigate } from "react-router-dom";
 import Axios from "axios";
 import ListUp from "./ListUp";
@@ -20,9 +20,8 @@ function TestMain() {
   const { state, dispatch } = useContext(AuthContext);
   const [userId] = useState(state?.user?.login || "");
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setLoading(true);
-
     await Axios.get(`https://api.github.com/users/${userId}/repos`).then(
       (response) => {
         if (response.status === 200) {
@@ -33,22 +32,50 @@ function TestMain() {
         }
       }
     );
-  };
+  }, [userId]);
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [loadData]);
+
+  const handleSave = useCallback(
+    (detail) => {
+      dispatch({
+        type: "ADD",
+        payload: { name: detail.name, storeId: detail.id },
+      });
+    },
+    [dispatch]
+  );
+
+  const listUp = useCallback(
+    (rawData, loading) => {
+      if (loading) {
+        return <h2>Loading...</h2>;
+      }
+      return rawData.map((v, index) => {
+        if (v.name.indexOf(inputSearch) !== -1) {
+          return (
+            <List
+              onClick={() => {
+                handleSave(v);
+              }}
+              key={index}
+            >
+              {v.name}
+            </List>
+          );
+        } else {
+          return null;
+        }
+      });
+    },
+    [handleSave, inputSearch]
+  );
 
   if (!state.isLoggedIn) {
     return <Navigate to="/gitRepo" />;
   }
-
-  const handleSave = (detail) => {
-    dispatch({
-      type: "ADD",
-      payload: { name: detail.name, storeId: detail.id },
-    });
-  };
 
   const handlerSearch = (e) => {
     setInputSearch(e.target.value);
@@ -59,26 +86,6 @@ function TestMain() {
     dispatch({ type: "DELETE_ALL" });
   };
 
-  const listUp = (rawData, loading) => {
-    if (loading) {
-      return <h2>Loading...</h2>;
-    }
-    return rawData.map((v) => {
-      if (v.name.indexOf(inputSearch) !== -1) {
-        return (
-          <List
-            onClick={() => {
-              handleSave(v);
-            }}
-          >
-            {v.name}
-          </List>
-        );
-      } else {
-        return null;
-      }
-    });
-  };
   return (
     <Container>
       <Wrapper>

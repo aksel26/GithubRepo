@@ -27,7 +27,7 @@ function ListUp() {
   const listSelected = () => {
     if (items.length >= 1) {
       return items.map((v, id) => (
-        <li style={{ listStyle: "none", padding: "3px 0px" }}>
+        <li style={{ listStyle: "none", padding: "3px 0px" }} key={id}>
           <LinkRouter to={v.name}>{v.name}</LinkRouter>
           <Button name={v.name} id={v.storeId} onClick={deleteElement}>
             삭제
