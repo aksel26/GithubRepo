@@ -27,7 +27,7 @@ function TestMain() {
   const loadData = useCallback(async () => {
     setLoading(true);
     await Axios.get(`https://api.github.com/users/${userId}/repos`, {
-      headers: { Authorization: "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" },
+      headers: { Authorization: process.env.PAT },
     }).then((response) => {
       if (response.status === 200) {
         setRawData(response.data);
