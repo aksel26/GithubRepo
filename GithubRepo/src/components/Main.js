@@ -1,8 +1,9 @@
-import React, { useEffect, useState, useContext, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+import { add } from "../redux/actions";
 import Axios from "axios";
 import ListUp from "./ListUp";
-import { AuthContext } from "../App";
 import Button from "./style/Button";
 import Input from "./style/Input";
 import Wrapper from "./style/Wrapper";
@@ -16,23 +17,26 @@ function TestMain() {
   const [inputSearch, setInputSearch] = useState("");
   const [storage] = useState([]);
   const [selected] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const { state, dispatch } = useContext(AuthContext);
-  const [userId] = useState(state?.user?.login || "");
+  const [Loading, setLoading] = useState(false);
+  // const { state, dispatch } = useContext(AuthContext);
+
+  const dispatch = useDispatch();
+  const state = useSelector((state) => state);
+  const [userId] = useState(state?.login?.user?.login || "");
 
   const loadData = useCallback(async () => {
     setLoading(true);
-    await Axios.get(`https://api.github.com/users/${userId}/repos`).then(
-      (response) => {
-        if (response.status === 200) {
-          setRawData(response.data);
-          setLoading(false);
-        } else {
-          alert("불러오기 실패");
-        }
+    await Axios.get(`https://api.github.com/users/${userId}/repos`, {
+      headers: { Authorization: "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" },
+    }).then((response) => {
+      if (response.status === 200) {
+        setRawData(response.data);
+        setLoading(false);
+      } else {
+        alert("불러오기 실패");
       }
-    );
-  }, [userId]);
+    });
+  }, [setLoading, userId]);
 
   useEffect(() => {
     loadData();
@@ -40,44 +44,35 @@ function TestMain() {
 
   const handleSave = useCallback(
     (detail) => {
-      dispatch({
-        type: "ADD",
-        payload: { name: detail.name, storeId: detail.id },
-      });
+      dispatch(add(detail));
     },
     [dispatch]
   );
 
-  const listUp = useCallback(
-    (rawData, loading) => {
-      if (loading) {
-        return <h2>Loading...</h2>;
+  const listUp = (rawData) => {
+    return rawData.map((v, index) => {
+      if (v.name.indexOf(inputSearch) !== -1) {
+        return (
+          <List
+            onClick={() => {
+              handleSave(v);
+            }}
+            key={index}
+          >
+            {v.name}
+          </List>
+        );
+      } else {
+        return null;
       }
-      return rawData.map((v, index) => {
-        if (v.name.indexOf(inputSearch) !== -1) {
-          return (
-            <List
-              onClick={() => {
-                handleSave(v);
-              }}
-              key={index}
-            >
-              {v.name}
-            </List>
-          );
-        } else {
-          return null;
-        }
-      });
-    },
-    [handleSave, inputSearch]
-  );
-
-  if (!state.isLoggedIn) {
+    });
+  };
+  if (!state.login.isLoggedIn) {
     return <Navigate to="/gitRepo" />;
   }
 
   const handlerSearch = (e) => {
+    e.preventDefault();
     setInputSearch(e.target.value);
   };
 
@@ -98,7 +93,7 @@ function TestMain() {
 
           <Button onClick={initSelected}>다시 담기</Button>
           <h1>Storage List</h1>
-          <ul style={{ paddingLeft: "0px" }}>{listUp(rawData, loading)}</ul>
+          <ul style={{ paddingLeft: "0px" }}>{listUp(rawData)}</ul>
         </Left>
         <Right>
           <ListUp

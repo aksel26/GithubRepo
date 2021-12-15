@@ -1,14 +1,18 @@
 import React, { useState, useContext, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Styled from "styled-components";
 import { AuthContext } from "../App";
 import Icon from "@mdi/react";
 import { mdiGithub } from "@mdi/js";
 import { Navigate } from "react-router-dom";
+import { login } from "../redux/actions";
 
 export default function Login() {
-  const { state, dispatch } = useContext(AuthContext);
+  // const { state, dispatch } = useContext(AuthContext);
+  const state = useSelector((state) => state.login);
   const [data, setData] = useState({ errorMessage: "", isLoading: false });
 
+  const dispatch = useDispatch();
   const { client_id, redirect_uri } = state;
   useEffect(() => {
     // After requesting Github access, Github redirects back to your app with a code parameter
@@ -33,10 +37,11 @@ export default function Login() {
       })
         .then((response) => response.json())
         .then((data) => {
-          dispatch({
-            type: "LOGIN",
-            payload: { user: data, isLoggedIn: true },
-          });
+          // dispatch({
+          //   type: "LOGIN",
+          //   payload: { user: data, isLoggedIn: true },
+          // });
+          dispatch(login({ data, isLoggedIn: true }));
         })
         .catch((error) => {
           setData({
