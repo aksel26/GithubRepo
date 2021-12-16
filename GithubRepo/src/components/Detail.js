@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
-import { AuthContext } from "../App";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import Axios from "axios";
 import PaginationFunc from "./PaginationFunc";
 import { useParams } from "react-router-dom";
@@ -8,14 +8,11 @@ import LinkRouter from "./style/LinkRouter";
 function Detail() {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-
   const [DetailsPerPage] = useState(10);
-
   const [commits, setCommits] = useState([]);
-
   let { id } = useParams();
-  const { state } = useContext(AuthContext);
-  const [userId] = useState(state.user.login);
+  const state = useSelector((state) => state);
+  const [userId] = useState(state.login.user.login);
 
   useEffect(() => {
     getCommits(id, userId);

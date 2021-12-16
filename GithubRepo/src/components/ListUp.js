@@ -1,15 +1,14 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AuthContext } from "../App";
 import Button from "./style/Button";
-import { deleteTarget } from "../redux/actions";
+import { deleteTarget, logout } from "../redux/actions";
 import LinkRouter from "./style/LinkRouter";
 function ListUp() {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.list.data);
+  const logInFlag = useSelector((state) => state.login.isLoggedIn);
+  console.log("logInFlag: ", logInFlag);
   const [items, setItems] = useState([]);
-
-  // const { state, dispatch } = useContext(AuthContext);
 
   useEffect(() => {
     setItems(state);
@@ -18,16 +17,13 @@ function ListUp() {
   const deleteElement = (e) => {
     const targetId = e.target.id;
 
-    // dispatch({ type: "DELETE", payload: id });
     dispatch(deleteTarget(targetId));
   };
 
   const logOut = () => {
-    // if (state.isLoggedIn) {
-    //   dispatch({
-    //     type: "LOGOUT",
-    //   });
-    // }
+    if (logInFlag) {
+      dispatch(logout());
+    }
   };
   const listSelected = () => {
     if (items.length >= 1) {

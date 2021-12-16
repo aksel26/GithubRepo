@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
-import { add } from "../redux/actions";
+import { add, delete_all } from "../redux/actions";
 import Axios from "axios";
 import ListUp from "./ListUp";
 import Button from "./style/Button";
@@ -18,7 +18,6 @@ function TestMain() {
   const [storage] = useState([]);
   const [selected] = useState([]);
   const [Loading, setLoading] = useState(false);
-  // const { state, dispatch } = useContext(AuthContext);
 
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
@@ -78,7 +77,7 @@ function TestMain() {
 
   const initSelected = (e) => {
     e.preventDefault();
-    dispatch({ type: "DELETE_ALL" });
+    dispatch(delete_all());
   };
 
   return (
